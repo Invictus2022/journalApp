@@ -33,18 +33,18 @@ public class JournalEntryController {
     }
 
     @GetMapping("id/{id}")
-    public  ResponseEntity<JournalEntryDTO> getJournalByID(@RequestParam String id){
+    public  ResponseEntity<JournalEntryDTO> getJournalByID(@PathVariable  String id){
         return service.getJournalByID(id);
     }
 
     @DeleteMapping("id/{id}")
-    public  ResponseEntity<String> deleteJournalByID(@RequestParam String id){
+    public  ResponseEntity<String> deleteJournalByID(@PathVariable  String id){
         return service.deleteJournalByID(id);
     }
 
     @PostMapping("id/{id}")
     public  ResponseEntity<JournalEntryDTO> updateJournalByID(
-            @RequestParam String id, @RequestBody JournalEntryDTO journalEntry)
+            @PathVariable  String id, @RequestBody JournalEntryDTO journalEntry)
     {
         return service.updateJournalByID(id,journalEntry);
     }
