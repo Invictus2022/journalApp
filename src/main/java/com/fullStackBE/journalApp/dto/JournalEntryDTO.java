@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
     @NoArgsConstructor
     @Data
     public class JournalEntryDTO {
-        private ObjectId id;
+        private String id;
         private String title;
         private String content;
         private LocalDateTime date;

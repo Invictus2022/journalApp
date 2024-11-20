@@ -1,6 +1,9 @@
 package com.fullStackBE.journalApp.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fullStackBE.journalApp.model.SentimentData;
 import lombok.*;
 import org.bson.types.ObjectId;
@@ -16,10 +19,12 @@ import java.time.LocalDateTime;
 public class JournalEntry {
 
         @Id
-        private ObjectId id;
+        private String id;
         @NonNull
         private String title;
         private String content;
+
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime date;
         private SentimentData sentiment;
 
