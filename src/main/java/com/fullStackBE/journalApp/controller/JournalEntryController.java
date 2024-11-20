@@ -42,8 +42,8 @@ public class JournalEntryController {
         return service.deleteJournalByID(id);
     }
 
-    @PostMapping("id/{id}")
-    public  ResponseEntity<JournalEntryDTO> updateJournalByID(
+    @PutMapping("id/{id}")
+    public  ResponseEntity<String> updateJournalByID(
             @PathVariable  String id, @RequestBody JournalEntryDTO journalEntry)
     {
         return service.updateJournalByID(id,journalEntry);

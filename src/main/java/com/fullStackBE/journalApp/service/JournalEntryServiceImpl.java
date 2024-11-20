@@ -38,6 +38,7 @@ public class JournalEntryServiceImpl implements JournalEntryService {
         return new ResponseEntity<>("Done", HttpStatus.OK);
     }
 
+
     @Override
    public ResponseEntity<List<JournalEntryDTO>> getAllJournalEntry(){
         List<JournalEntry> journalEntry = repository.findAll();
@@ -66,11 +67,35 @@ public class JournalEntryServiceImpl implements JournalEntryService {
 
     @Override
     public ResponseEntity<String> deleteJournalByID(String id){
-        return null;
+        if (repository.findById(id).isPresent()){
+            repository.deleteById(id);
+            return new ResponseEntity<>(
+                    "Deleted Successfully", HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        }
     }
 
     @Override
-    public ResponseEntity<JournalEntryDTO> updateJournalByID(String id, JournalEntryDTO journalEntry){
-        return  null;
+    public ResponseEntity<String> updateJournalByID(String id, JournalEntryDTO journalEntry){
+        if (repository.findById(id).isPresent()){
+            JournalEntry convertJournalEntry = JournalEntryMapper
+                    .INSTANCE
+                    .mapJournalEntryDTOToJornalEntry(journalEntry);
+
+            JournalEntry fetchJournalEntry =  repository.findById(id).get();
+
+            fetchJournalEntry.setContent(convertJournalEntry.getContent());
+            fetchJournalEntry.setTitle(convertJournalEntry.getTitle());
+            fetchJournalEntry.setSentiment(convertJournalEntry.getSentiment());
+            fetchJournalEntry.setDate(LocalDateTime.now());
+
+            repository.save(fetchJournalEntry);
+
+            return new ResponseEntity<>(
+                    "Update Successful", HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        }
     }
 }

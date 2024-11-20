@@ -17,5 +17,5 @@ public interface JournalEntryService {
 
     ResponseEntity<String> deleteJournalByID(String id);
 
-    ResponseEntity<JournalEntryDTO> updateJournalByID(String id,JournalEntryDTO journalEntry);
+    ResponseEntity<String> updateJournalByID(String id, JournalEntryDTO journalEntry);
 }
