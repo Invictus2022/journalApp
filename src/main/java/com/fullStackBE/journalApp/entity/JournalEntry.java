@@ -2,11 +2,8 @@ package com.fullStackBE.journalApp.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fullStackBE.journalApp.model.SentimentData;
 import lombok.*;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
@@ -20,6 +17,7 @@ public class JournalEntry {
 
         @Id
         private String id;
+
         @NonNull
         private String title;
         private String content;
@@ -28,5 +26,7 @@ public class JournalEntry {
         private LocalDateTime date;
         private SentimentData sentiment;
 
+        @NonNull
+        private String userId;
 
 }

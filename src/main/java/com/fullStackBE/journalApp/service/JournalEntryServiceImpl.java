@@ -2,14 +2,14 @@ package com.fullStackBE.journalApp.service;
 
 
 import com.fullStackBE.journalApp.dto.JournalEntryDTO;
+import com.fullStackBE.journalApp.dto.UserDTO;
 import com.fullStackBE.journalApp.entity.JournalEntry;
+import com.fullStackBE.journalApp.entity.User;
 import com.fullStackBE.journalApp.mapper.JournalEntryMapper;
 import com.fullStackBE.journalApp.repo.JournalEntryRepository;
-import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
+import com.fullStackBE.journalApp.repo.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,22 +23,40 @@ public class JournalEntryServiceImpl implements JournalEntryService {
 
     private static final Logger logger = LoggerFactory.getLogger(JournalEntryServiceImpl.class);
     private final JournalEntryRepository repository;
+    private final UserRepository userRepository;
 
-    public JournalEntryServiceImpl(JournalEntryRepository repository) {
+
+
+    public JournalEntryServiceImpl(JournalEntryRepository repository, UserRepository userRepository) {
         this.repository = repository;
+        this.userRepository = userRepository;
+
     }
 
-
+//    Save Journal using Username
     @Override
-    public ResponseEntity<String> saveJournalEntry(JournalEntryDTO journalEntry) {
-        journalEntry.setDate(LocalDateTime.now());
+    public ResponseEntity<String> saveJournalEntry(String name, JournalEntryDTO journalEntry) {
+        User fetchedUserByName = userRepository.findByUserName(name);
 
-        JournalEntry journalEntryMapped = JournalEntryMapper.INSTANCE.mapJournalEntryDTOToJornalEntry(journalEntry);
-        repository.save(journalEntryMapped);
-        return new ResponseEntity<>("Done", HttpStatus.OK);
+        if (fetchedUserByName != null){
+            journalEntry.setDate(LocalDateTime.now());
+
+            journalEntry.setUserId(fetchedUserByName.getId());
+
+            JournalEntry journalEntryMapped = JournalEntryMapper
+                    .INSTANCE
+                    .mapJournalEntryDTOToJornalEntry(journalEntry);
+
+            repository.save(journalEntryMapped);
+            return new ResponseEntity<>("Done", HttpStatus.OK);
+        }else {
+            return  new ResponseEntity<>("Given name not found", HttpStatus.NOT_FOUND);
+        }
+
     }
 
 
+//    Fetch All Journal
     @Override
    public ResponseEntity<List<JournalEntryDTO>> getAllJournalEntry(){
         List<JournalEntry> journalEntry = repository.findAll();
@@ -51,11 +69,13 @@ public class JournalEntryServiceImpl implements JournalEntryService {
         return new ResponseEntity<>(journalEntryDTOS,HttpStatus.OK);
     }
 
+
+//    Get JournalByID
     @Override
     public ResponseEntity<JournalEntryDTO> getJournalByID(String id){
 
        if (repository.findById(id).isPresent()){
-           JournalEntry journalEntry = repository.findById(id).get();
+           JournalEntry journalEntry =  repository.findById(id).get();
            return new ResponseEntity<>(
                    JournalEntryMapper
                            .INSTANCE
@@ -65,6 +85,18 @@ public class JournalEntryServiceImpl implements JournalEntryService {
        }
     }
 
+    //    Get JournalByUserID(Consumed by User Service)
+    public List<JournalEntry> getJournalByUserID(String id){
+
+        if (repository.findByUserId(id).isEmpty()){
+            return null;
+        }else {
+            return repository.findByUserId(id);
+        }
+    }
+
+
+//   Delete JournalByID
     @Override
     public ResponseEntity<String> deleteJournalByID(String id){
         if (repository.findById(id).isPresent()){
@@ -76,6 +108,8 @@ public class JournalEntryServiceImpl implements JournalEntryService {
         }
     }
 
+
+//   Update JournalByID
     @Override
     public ResponseEntity<String> updateJournalByID(String id, JournalEntryDTO journalEntry){
         if (repository.findById(id).isPresent()){

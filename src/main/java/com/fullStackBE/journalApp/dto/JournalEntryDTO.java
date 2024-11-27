@@ -17,5 +17,6 @@ import java.time.LocalDateTime;
         private String content;
         private LocalDateTime date;
         private SentimentData sentiment;
+        private String userId;
     }
 

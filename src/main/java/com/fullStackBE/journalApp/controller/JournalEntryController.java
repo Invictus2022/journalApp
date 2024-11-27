@@ -10,21 +10,22 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequiredArgsConstructor
+
 @RestController
 @RequestMapping("/journalapp")
 public class JournalEntryController {
 
     @Autowired
-    private JournalEntryService service;
+    private final JournalEntryService service;
 
     public JournalEntryController(JournalEntryService service) {
         this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<String> saveJournalEntry(@RequestBody JournalEntryDTO journalEntry){
-        return service.saveJournalEntry(journalEntry);
+
+    @PostMapping("{name}")
+    public ResponseEntity<String> saveJournalEntry(@PathVariable String name ,@RequestBody JournalEntryDTO journalEntry){
+        return service.saveJournalEntry(name,journalEntry);
     }
 
     @GetMapping
@@ -48,5 +49,7 @@ public class JournalEntryController {
     {
         return service.updateJournalByID(id,journalEntry);
     }
+
+
 }
 

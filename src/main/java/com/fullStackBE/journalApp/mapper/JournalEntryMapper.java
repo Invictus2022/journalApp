@@ -19,4 +19,6 @@ public interface JournalEntryMapper {
 
     List<JournalEntryDTO> mapJournalEntryListToJournalEntryListDTO(List<JournalEntry> journalEntry);
 
+    List<JournalEntry> mapJournalEntryListDTOToJournalEntryList(List<JournalEntryDTO> journalEntry);
+
 }
